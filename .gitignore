@@ -1,1 +1,3 @@
 /data/*
+/lru-java/*.class
+/__pycache__
