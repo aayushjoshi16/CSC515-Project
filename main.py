@@ -1,4 +1,5 @@
 import sys
+import argparse
 from CacheSimulator import CacheSimulator
 
 def read_file(fname):
@@ -16,10 +17,12 @@ def read_file(fname):
     cs.print_info()
 
 def main():
-    if len(sys.argv) > 1:
-        read_file(sys.argv[1])
-    else:
-        print("Please provide a filename as argument")
+    parser = argparse.ArgumentParser(
+                    prog='CacheSimulator',
+                    description='Sumulates a multilevel cache')
+    parser.add_argument("filename", help="Name of the input address file")
+    args = parser.parse_args()
+    read_file(args.filename)
 
 if __name__ == "__main__":
     main()
