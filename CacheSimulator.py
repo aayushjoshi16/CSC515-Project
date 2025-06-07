@@ -67,7 +67,8 @@ class CacheConfig:
 
 
 class CacheSimulator:
-    def __init__(self):
+    def __init__(self, config_type="all"):
+        self.config_type = config_type
         self.configs = [
             CacheConfig(2048, 1, 1, 2, 0, 9, 1),
             CacheConfig(2048, 1, 2, 2, 1, 8, 2),
@@ -80,10 +81,24 @@ class CacheSimulator:
 
     def config_step(self, address, line_num):
         hit = -1
+
+        # Process all configurations independently
         for i, config in enumerate(self.configs):
-            if config.access(address, line_num):
-                hit = i
-                break
+            # If "all" configurations are requested, simulate large cache with all configs
+            if self.config_type == "all":
+                hit_result = config.access(address, line_num)
+                if hit_result and hit == -1:
+                    hit = i
+
+            # If a specific configuration is requested, only process that one
+            if self.config_type == str(i + 1):
+                hit_result = config.access(address, line_num)
+                if hit_result:
+                    hit = i
+                else:
+                    hit = -1
+
+        # Output in the original format for LSTM compatibility
         print(f"{hit + 1} {address:08x}")
 
     def print_info(self):
